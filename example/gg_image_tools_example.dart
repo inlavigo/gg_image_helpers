@@ -10,7 +10,7 @@ import 'package:gg_image_tools/gg_image_tools.dart';
 Future<void> main() async {
   const param = 'foo';
 
-  final ggImageTools = GgImageTools(
+  final ggImageTools = Xyz(
     param: param,
     log: (msg) {},
   );

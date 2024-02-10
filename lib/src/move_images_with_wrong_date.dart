@@ -11,21 +11,42 @@ import 'package:path/path.dart';
 
 /// MoveImagesWithWrongDate
 class MoveImagesWithWrongDate {
-  static const supportedFileTypes = ['jpg', 'jpeg', 'bpm', 'png', 'heic'];
+  /// The file types that are processed
+  static const supportedFileTypes = [
+    'jpg',
+    'jpeg',
+    'bpm',
+    'png',
+    'heic',
+    'mp4',
+    'mov',
+  ];
 
   /// Constructor
-  MoveImagesWithWrongDate({required String path}) : folder = Directory(path) {
-    assert(folder.existsSync());
+  MoveImagesWithWrongDate({
+    required this.input,
+    required this.output,
+    required this.log,
+  }) {
+    assert(input.existsSync());
+    assert(output.existsSync());
+    assert(input.absolute != output.absolute);
   }
 
-  /// The folder to be processed
-  final Directory folder;
+  /// The input folder the images are read from
+  final Directory input;
+
+  /// The output folder the images are copied to
+  final Directory output;
+
+  /// The log function
+  void Function(String msg) log;
 
   // ...........................................................................
   /// Execute process
   Future<void> exec() async {
     // Get all folders in folder
-    final subFolders = folder.listSync().whereType<Directory>();
+    final subFolders = input.listSync().whereType<Directory>();
     for (final Directory folder in subFolders) {
       await _processFolder(folder);
     }
@@ -119,35 +140,28 @@ class MoveImagesWithWrongDate {
 
     // Does the creation date of the image match the folder date?
     final DateTime(year: yearIs, month: monthIs, day: dayIs) = creationDate;
-    final matches = year == yearIs && month == monthIs && day == dayIs;
-
-    // If yes, nothing is to do
-    if (matches) {
-      return;
-    }
 
     // If no, create a folder with that date
     final imageFolder = image.parent;
-    final parentFolder = imageFolder.parent;
 
     // Extract the name from the imageFolder
     final name =
         basename(imageFolder.path).substring('YYYY-MM-DD'.length).trim();
 
-    // Create a folder with the same name but different date
+    // Create the target folder with the right date
     final yearStr = yearIs.toString();
     final monthStr = monthIs.toString().padLeft(2, '0');
     final dayStr = dayIs.toString().padLeft(2, '0');
     final folderName = '$yearStr-$monthStr-$dayStr $name';
 
     // Create folder when not existing
-    final newFolder = Directory(join(parentFolder.path, folderName));
-    if (!newFolder.existsSync()) {
-      newFolder.createSync();
+    final targetFolder = Directory(join(output.path, folderName));
+    if (!targetFolder.existsSync()) {
+      targetFolder.createSync();
     }
 
-    // Move the file into that folder
-    final newFilePath = join(newFolder.path, basename(image.path));
-    image.renameSync(newFilePath);
+    // Copy the to that folder
+    final newFilePath = join(targetFolder.path, basename(image.path));
+    image.copySync(newFilePath);
   }
 }

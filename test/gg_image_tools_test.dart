@@ -15,8 +15,10 @@ void main() {
     // #########################################################################
     group('exec()', () {
       test('description of the test ', () async {
-        final ggImageTools =
-            GgImageTools(param: 'foo', log: (msg) => messages.add(msg));
+        final ggImageTools = Xyz(
+          param: 'foo',
+          log: (msg) => messages.add(msg),
+        );
 
         await ggImageTools.exec();
       });
@@ -25,7 +27,8 @@ void main() {
     // #########################################################################
     group('Command', () {
       test('should allow to run the code from command line', () async {
-        final ggImageTools = GgImageToolsCmd(log: (msg) => messages.add(msg));
+        final ggImageTools =
+            MoveImagesWithWrongDateCmd(log: (msg) => messages.add(msg));
 
         final CommandRunner<void> runner = CommandRunner<void>(
           'ggImageTools',

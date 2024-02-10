@@ -6,4 +6,4 @@
 
 library;
 
-export 'src/gg_image_tools.dart';
+export 'src/move_images_with_wrong_date_cmd.dart';

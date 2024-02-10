@@ -20,7 +20,7 @@ Future<void> runGgImageTools({
       'GgImageTools',
       'Various tools for image organization. '
           'They help to organize folders with images. ',
-    )..addCommand(GgImageToolsCmd(log: log));
+    )..addCommand(MoveImagesWithWrongDateCmd(log: log));
 
     // Run the command
     await runner.run(args);
