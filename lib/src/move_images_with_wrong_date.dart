@@ -53,6 +53,10 @@ class MoveImagesWithWrongDate {
     final images =
         input.listSync(recursive: true).whereType<File>().where((element) {
       var ext = extension(element.path.toLowerCase());
+      if (ext.isEmpty) {
+        return false;
+      }
+
       ext = ext.substring(1, ext.length);
 
       final isImage = supportedFileTypes.contains(ext);
