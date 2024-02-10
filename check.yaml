@@ -1,0 +1,8 @@
+analyze:
+  execute: true
+format:
+  execute: true
+coverage:
+  execute: true
+pana:
+  execute: false
