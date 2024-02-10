@@ -22,9 +22,6 @@ void main() {
     if (output.existsSync()) {
       output.deleteSync(recursive: true);
     }
-
-    // Create new parent directory
-    output.createSync(recursive: true);
   }
 
   group('MoveImagesWithWrongDate', () {

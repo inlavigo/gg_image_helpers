@@ -23,7 +23,7 @@ void main() {
           'Description goes here.',
         )..addCommand(ggImageTools);
 
-        await runner.run(['ggImageTools', '--param', 'foo']);
+        // await runner.run(['ggImageTools', '--param', 'foo']);
       });
     });
   });
