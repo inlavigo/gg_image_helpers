@@ -9,7 +9,6 @@ import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:gg_image_tools/src/move_images_with_wrong_date.dart';
-import 'package:path/path.dart';
 
 /// The command line interface for GgImageTools
 class MoveImagesWithWrongDateCmd extends Command<dynamic> {

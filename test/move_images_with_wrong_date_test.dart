@@ -13,33 +13,18 @@ import 'package:test/test.dart';
 void main() {
   final tempDir =
       Directory('/tmp').existsSync() ? Directory('/tmp') : Directory.systemTemp;
-  final parentDir = Directory(join(tempDir.path, 'move_images_test'));
-  final imageDir01 = Directory(join(parentDir.path, '2024-02-10 Vacation'));
-  final imageDir02 = Directory(join(parentDir.path, '2024-02-12 Holiday'));
-  final imageDir03 = Directory(join(parentDir.path, '2023-08-05 Summer Time'));
+  final output = Directory(join(tempDir.path, 'move_images_test'));
+  final input = Directory('./test/test_images/2024-02-10 Images');
 
   // ...........................................................................
-  void createTestFolders() {
+  void createOutputFolder() {
     // Delete previous folder
-    if (parentDir.existsSync()) {
-      parentDir.deleteSync(recursive: true);
+    if (output.existsSync()) {
+      output.deleteSync(recursive: true);
     }
 
     // Create new parent directory
-    parentDir.createSync(recursive: true);
-
-    // Create three image directories
-    imageDir01.createSync(recursive: true);
-    imageDir02.createSync(recursive: true);
-    imageDir03.createSync(recursive: true);
-
-    // Copy sample images into the directories
-    final sampleImageDir = Directory('./test/images');
-    assert(sampleImageDir.existsSync());
-    for (final image in sampleImageDir.listSync().whereType<File>()) {
-      final targetFilePath = join(imageDir01.path, basename(image.path));
-      image.copySync(targetFilePath);
-    }
+    output.createSync(recursive: true);
   }
 
   group('MoveImagesWithWrongDate', () {
@@ -50,9 +35,34 @@ void main() {
           'should move images with creation dates '
           'that match not the folder date '
           'to a new parent folder', () async {
-        createTestFolders();
-        final move = MoveImagesWithWrongDate(path: parentDir.path);
+        createOutputFolder();
+        final move = MoveImagesWithWrongDate(
+          input: input,
+          output: output,
+          log: (msg) {},
+        );
         await move.exec();
+
+        // The images have been moved to folders matching their creation date
+        final outputPath = output.path;
+        final expectedFiles = [
+          // 2023-07-06
+          '$outputPath/2023-07-06 Images/_DSC0004.JPG',
+          '$outputPath/2023-07-06 Images/_DSC0006.JPG',
+          '$outputPath/2023-07-06 Images/_DSC0012.JPG',
+          '$outputPath/2023-07-06 Images/_DSC0017.JPG',
+          // 2023-09-10
+          '$outputPath/2023-09-10 Images/IMG_7898.HEIC',
+          // 2023-09-14
+          '$outputPath/2023-09-14 Images/IMG_7900.HEIC',
+          // 2023-09-17
+          '$outputPath/2023-09-17 Images/IMG_7957.HEIC',
+          '$outputPath/2023-09-17 Images/IMG_7958.HEIC',
+        ];
+
+        for (final path in expectedFiles) {
+          expect(File(path).existsSync(), isTrue);
+        }
       });
     });
   });

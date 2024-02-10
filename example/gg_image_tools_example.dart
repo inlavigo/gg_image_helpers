@@ -5,17 +5,20 @@
 // Use of this source code is governed by terms that can be
 // found in the LICENSE file in the root of this package.
 
-import 'package:gg_image_tools/gg_image_tools.dart';
+import 'dart:io';
+
+import 'package:gg_image_tools/src/move_images_with_wrong_date.dart';
 
 Future<void> main() async {
-  const param = 'foo';
+  final input = Directory('./test/images');
+  final output = Directory.systemTemp.createTempSync();
 
-  final ggImageTools = Xyz(
-    param: param,
-    log: (msg) {},
+  final ggImageTools = MoveImagesWithWrongDate(
+    input: input,
+    output: output,
+    log: print,
   );
 
-  print('Executing with param $param');
   await ggImageTools.exec();
 
   print('Done.');

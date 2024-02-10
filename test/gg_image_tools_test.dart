@@ -13,19 +13,7 @@ void main() {
 
   group('GgImageTools()', () {
     // #########################################################################
-    group('exec()', () {
-      test('description of the test ', () async {
-        final ggImageTools = Xyz(
-          param: 'foo',
-          log: (msg) => messages.add(msg),
-        );
-
-        await ggImageTools.exec();
-      });
-    });
-
-    // #########################################################################
-    group('Command', () {
+    group('MoveImagesWithWrongDate', () {
       test('should allow to run the code from command line', () async {
         final ggImageTools =
             MoveImagesWithWrongDateCmd(log: (msg) => messages.add(msg));

@@ -29,8 +29,10 @@ class MoveImagesWithWrongDate {
     required this.log,
   }) {
     assert(input.existsSync());
-    assert(output.existsSync());
     assert(input.absolute != output.absolute);
+    if (output.existsSync()) {
+      throw Exception('Target folder already exists');
+    }
   }
 
   /// The input folder the images are read from
@@ -45,55 +47,22 @@ class MoveImagesWithWrongDate {
   // ...........................................................................
   /// Execute process
   Future<void> exec() async {
-    // Get all folders in folder
-    final subFolders = input.listSync().whereType<Directory>();
-    for (final Directory folder in subFolders) {
-      await _processFolder(folder);
-    }
-  }
-
-  // ...........................................................................
-  Future<void> _processFolder(Directory folder) async {
-    // Get base name
-    final folderName = basename(folder.path);
-
-    // Extract prefix yyyy-mm-dd from folder name?
-    final regExp = RegExp(r'^(\d\d\d\d)-(\d\d)-(\d\d)');
-    final firstMatch = regExp.firstMatch(folderName);
-
-    // No image folder?
-    if (firstMatch == null) {
-      return;
-    }
-
-    // Get dates
-    final year = int.parse(firstMatch.group(1)!);
-    final month = int.parse(firstMatch.group(2)!);
-    final day = int.parse(firstMatch.group(3)!);
+    output.createSync(recursive: true);
 
     // Iterate all images
-    final images = folder.listSync().whereType<File>().where((element) {
+    final images =
+        input.listSync(recursive: true).whereType<File>().where((element) {
       var ext = extension(element.path.toLowerCase());
       ext = ext.substring(1, ext.length);
 
-      final result = supportedFileTypes.contains(
-        ext,
-      );
-      return result;
+      final isImage = supportedFileTypes.contains(ext);
+      return isImage;
     });
 
     for (final image in images) {
       await _processImage(
         image: image,
-        year: year,
-        month: month,
-        day: day,
       );
-    }
-
-    // Delete folder if it is empty
-    if (folder.listSync().isEmpty) {
-      folder.deleteSync();
     }
   }
 
@@ -131,9 +100,6 @@ class MoveImagesWithWrongDate {
   // ...........................................................................
   Future<void> _processImage({
     required File image,
-    required int year,
-    required int month,
-    required int day,
   }) async {
     final creationDate =
         await _exifCreationDate(image) ?? await _fileCreationDate(image);
@@ -144,9 +110,9 @@ class MoveImagesWithWrongDate {
     // If no, create a folder with that date
     final imageFolder = image.parent;
 
-    // Extract the name from the imageFolder
-    final name =
-        basename(imageFolder.path).substring('YYYY-MM-DD'.length).trim();
+    // Remove date from image folder
+    final name = basename(imageFolder.path)
+        .replaceFirst(RegExp(r'^\d\d\d\d-\d\d-\d\d '), '');
 
     // Create the target folder with the right date
     final yearStr = yearIs.toString();

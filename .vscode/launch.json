@@ -10,7 +10,13 @@
       "type": "dart",
       "request": "launch",
       "program": "${workspaceFolder}/bin/gg_image_tools.dart",
-      "args": ["ggImageTools", "--param", "value"],
+      "args": [
+        "mvcd",
+        "-i",
+        "${workspaceFolder}/test/",
+        "-o",
+        "/tmp/gg-image-tools-test"
+      ],
       "console": "debugConsole"
     },
     {
