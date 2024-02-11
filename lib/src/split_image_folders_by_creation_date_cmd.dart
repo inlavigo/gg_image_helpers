@@ -8,12 +8,12 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:gg_image_tools/src/move_images_with_wrong_date.dart';
+import 'package:gg_image_tools/src/split_image_folders_by_creation_date.dart';
 
 /// The command line interface for GgImageTools
-class MoveImagesWithWrongDateCmd extends Command<dynamic> {
+class SplitImageFoldersByCreationDateCmd extends Command<dynamic> {
   /// Constructor
-  MoveImagesWithWrongDateCmd({required this.log}) {
+  SplitImageFoldersByCreationDateCmd({required this.log}) {
     _addArgs();
   }
 
@@ -22,9 +22,10 @@ class MoveImagesWithWrongDateCmd extends Command<dynamic> {
 
   // ...........................................................................
   @override
-  final name = 'mvcd';
+  final name = 'split';
   @override
-  final description = 'Move images to the folder with the right creation date';
+  final description =
+      'Move images to the folders prefixed with their creation date';
 
   // ...........................................................................
   @override
@@ -35,7 +36,7 @@ class MoveImagesWithWrongDateCmd extends Command<dynamic> {
     var inputDir = Directory(input);
     var outputDir = Directory(output);
 
-    final move = MoveImagesWithWrongDate(
+    final move = SplitImageFoldersByCreationDate(
       input: inputDir,
       output: outputDir,
       log: log,

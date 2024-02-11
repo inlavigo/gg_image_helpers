@@ -7,13 +7,13 @@
 
 import 'dart:io';
 
-import 'package:gg_image_tools/src/move_images_with_wrong_date.dart';
+import 'package:gg_image_tools/src/split_image_folders_by_creation_date.dart';
 
 Future<void> main() async {
   final input = Directory('./test/images');
   final output = Directory.systemTemp.createTempSync();
 
-  final ggImageTools = MoveImagesWithWrongDate(
+  final ggImageTools = SplitImageFoldersByCreationDate(
     input: input,
     output: output,
     log: print,

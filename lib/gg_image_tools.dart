@@ -6,4 +6,4 @@
 
 library;
 
-export 'src/move_images_with_wrong_date_cmd.dart';
+export 'src/split_image_folders_by_creation_date_cmd.dart';

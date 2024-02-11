@@ -10,7 +10,7 @@ import 'package:exif/exif.dart';
 import 'package:path/path.dart';
 
 /// MoveImagesWithWrongDate
-class MoveImagesWithWrongDate {
+class SplitImageFoldersByCreationDate {
   /// The file types that are processed
   static const supportedFileTypes = [
     'jpg',
@@ -23,10 +23,11 @@ class MoveImagesWithWrongDate {
   ];
 
   /// Constructor
-  MoveImagesWithWrongDate({
+  SplitImageFoldersByCreationDate({
     required this.input,
     required this.output,
     required this.log,
+    this.useBirthDate = true,
   }) {
     assert(input.existsSync());
     assert(input.absolute != output.absolute);
@@ -43,6 +44,9 @@ class MoveImagesWithWrongDate {
 
   /// The log function
   void Function(String msg) log;
+
+  /// Try to use the birth date of the file
+  final bool useBirthDate;
 
   // ...........................................................................
   /// Execute process
@@ -71,17 +75,38 @@ class MoveImagesWithWrongDate {
   }
 
   // ...........................................................................
+  Future<DateTime?> _getFileCreationDate(String filePath) async {
+    // macOS 'stat' command to get file details, including the creation date.
+    // The '-f' flag specifies the output format, '%B' gets the birth time of
+    // the file.
+    var result = await Process.run('stat', ['-f', '%B', filePath]);
+
+    if (result.exitCode == 0) {
+      // The output will be the creation date as a timestamp.
+      var timestamp = int.parse((result.stdout as String).trim());
+      var creationDate = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+      return creationDate;
+    }
+    return null;
+  }
+
+  // ...........................................................................
   Future<DateTime> _fileCreationDate(File image) async {
+    var result = useBirthDate ? await _getFileCreationDate(image.path) : null;
+    if (result != null) {
+      return result;
+    }
+
     final fileStat = await image.stat();
-    var result = fileStat.accessed;
+    result = fileStat.accessed;
     if (result.microsecondsSinceEpoch >
         fileStat.changed.microsecondsSinceEpoch) {
       result = fileStat.changed;
     }
 
     if (result.microsecondsSinceEpoch >
-        fileStat.accessed.microsecondsSinceEpoch) {
-      result = fileStat.accessed;
+        fileStat.modified.microsecondsSinceEpoch) {
+      result = fileStat.modified;
     }
 
     return result;
