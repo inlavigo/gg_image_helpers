@@ -73,9 +73,11 @@ class MoveImagesWithWrongDate {
   // ...........................................................................
   Future<DateTime> _fileCreationDate(File image) async {
     final fileStat = await image.stat();
-    var result = fileStat.changed;
+    var result = fileStat.accessed;
     if (result.microsecondsSinceEpoch >
-        fileStat.modified.microsecondsSinceEpoch) result = fileStat.modified;
+        fileStat.changed.microsecondsSinceEpoch) {
+      result = fileStat.changed;
+    }
 
     if (result.microsecondsSinceEpoch >
         fileStat.accessed.microsecondsSinceEpoch) {
