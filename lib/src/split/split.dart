@@ -10,7 +10,7 @@ import 'package:exif/exif.dart';
 import 'package:path/path.dart';
 
 /// MoveImagesWithWrongDate
-class SplitImageFoldersByCreationDate {
+class Split {
   /// The file types that are processed
   static const supportedFileTypes = [
     'jpg',
@@ -23,7 +23,7 @@ class SplitImageFoldersByCreationDate {
   ];
 
   /// Constructor
-  SplitImageFoldersByCreationDate({
+  Split({
     required this.input,
     required this.output,
     required this.log,

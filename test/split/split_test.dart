@@ -6,11 +6,11 @@
 
 import 'dart:io';
 
-import 'package:gg_image_tools/src/split_image_folders_by_creation_date.dart';
+import 'package:gg_image_tools/gg_image_tools.dart';
 import 'package:path/path.dart';
 import 'package:test/test.dart';
 
-import 'expected_output_pathes.dart';
+import '../expected_output_pathes.dart';
 
 void main() {
   final tempDir =
@@ -35,13 +35,13 @@ void main() {
             'should move images and videos with creation dates that match not '
             'the folder date to a new parent folder', () async {
           createOutputFolder();
-          final move = SplitImageFoldersByCreationDate(
+          final split = Split(
             input: input,
             output: output,
             log: (msg) {},
             useBirthDate: useBirthDate,
           );
-          await move.exec();
+          await split.exec();
 
           // The images have been moved to folders matching their creation date
           expectRightFilePathes(output: output, useBirthDate: useBirthDate);
@@ -56,7 +56,7 @@ void main() {
 
       expect(
         () {
-          SplitImageFoldersByCreationDate(
+          Split(
             input: input,
             output: input, // Input and output are the same
             log: (msg) {},

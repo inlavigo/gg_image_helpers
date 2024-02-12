@@ -8,12 +8,12 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:gg_image_tools/src/split_image_folders_by_creation_date.dart';
+import 'package:gg_image_tools/src/split/split.dart';
 
 /// The command line interface for GgImageTools
-class SplitImageFoldersByCreationDateCmd extends Command<dynamic> {
+class SplitCli extends Command<dynamic> {
   /// Constructor
-  SplitImageFoldersByCreationDateCmd({required this.log}) {
+  SplitCli({required this.log}) {
     _addArgs();
   }
 
@@ -36,7 +36,7 @@ class SplitImageFoldersByCreationDateCmd extends Command<dynamic> {
     var inputDir = Directory(input);
     var outputDir = Directory(output);
 
-    final move = SplitImageFoldersByCreationDate(
+    final move = Split(
       input: inputDir,
       output: outputDir,
       log: log,

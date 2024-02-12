@@ -7,10 +7,10 @@
 // .............................................................................
 import 'package:args/command_runner.dart';
 import 'package:colorize/colorize.dart';
-import 'package:gg_image_tools/src/split_image_folders_by_creation_date_cmd.dart';
+import 'package:gg_image_tools/src/split/split_cli.dart';
 
 /// Executes the GgImageTools command line interface
-Future<void> runGgImageTools({
+Future<void> ggImageToolsCli({
   required List<String> args,
   required void Function(String msg) log,
 }) async {
@@ -23,7 +23,7 @@ Future<void> runGgImageTools({
     )
 
       /// Add more commands here
-      ..addCommand(SplitImageFoldersByCreationDateCmd(log: log));
+      ..addCommand(SplitCli(log: log));
 
     // Run the command
     await runner.run(args);

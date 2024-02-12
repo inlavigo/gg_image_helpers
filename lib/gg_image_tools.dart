@@ -6,4 +6,5 @@
 
 library;
 
-export 'src/split_image_folders_by_creation_date_cmd.dart';
+export 'src/split/split_cli.dart';
+export 'src/split/split.dart';

@@ -6,7 +6,7 @@
 
 import 'dart:io';
 
-import 'package:gg_image_tools/src/run_gg_image_tools.dart';
+import 'package:gg_image_tools/src/gg_image_tools_cli.dart';
 import 'package:test/test.dart';
 
 import 'expected_output_pathes.dart';
@@ -28,7 +28,7 @@ void main() {
     // #########################################################################
     group('run()', () {
       test('should allow to execute the command from cli', () async {
-        await runGgImageTools(
+        await ggImageToolsCli(
           args: ['split', '-i', './test/test_images', '-o', target.path],
           log: print,
         );
@@ -41,7 +41,7 @@ void main() {
         final messages = <String>[];
 
         // Run command with wrong option
-        await runGgImageTools(
+        await ggImageToolsCli(
           args: [
             'split',
             '-x', // Wrong option
