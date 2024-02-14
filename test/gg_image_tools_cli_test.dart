@@ -9,13 +9,10 @@ import 'dart:io';
 import 'package:gg_image_tools/src/gg_image_tools_cli.dart';
 import 'package:test/test.dart';
 
-import 'expected_output_pathes.dart';
+import 'helpers.dart';
 
 void main() {
-  final tmp =
-      Directory('/tmp').existsSync() ? '/tmp' : Directory.systemTemp.path;
-
-  final target = Directory('$tmp/gg_image_tools_test');
+  final target = Directory(tempDir.path).createTempSync();
 
   // ...........................................................................
   setUp(() {
@@ -33,7 +30,7 @@ void main() {
           log: print,
         );
 
-        expectRightFilePathes(output: target, useBirthDate: true);
+        expectRightFilePathes(output: target);
       });
 
       // .......................................................................

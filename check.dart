@@ -1,6 +1,7 @@
 #!/usr/bin/env dart
 
 import 'dart:io';
+import 'package:dart_ping/dart_ping.dart';
 import 'package:yaml/yaml.dart';
 
 import 'package:args/args.dart';
@@ -12,6 +13,7 @@ import 'package:args/args.dart';
 var isGitHub = Platform.environment.containsKey('GITHUB_ACTIONS');
 var hasErrors = false;
 var verbose = true;
+var exitOnError = true;
 var printAnnouncement = !isGitHub;
 final errorMessages = <String>[];
 dynamic yaml;
@@ -25,6 +27,26 @@ void loadConfig() {
   }
 
   yaml = loadYaml(file.readAsStringSync());
+}
+
+// .........................................................................
+/// Returns true if the internet is available
+Future<bool> hasInternet() async {
+  // If GitHub is not available, skip test.
+  final isGitHubAvailable =
+      isGitHub || (await Ping('github.com').stream.first).error == null;
+
+  return isGitHubAvailable;
+}
+
+// .............................................................................
+Future<void> checkInternet() async {
+  if (yaml['needsInternet'] == true) {
+    if (!await hasInternet()) {
+      print('❌ This package needs internet. Abort.');
+      exit(1);
+    }
+  }
 }
 
 // .............................................................................
@@ -68,16 +90,25 @@ Future<bool> check({
   final parts = command.split(' ');
   final cmd = parts.first;
   final List<String> arguments = parts.length > 1 ? parts.sublist(1) : [];
-  final result = await Process.run(cmd, arguments);
+  final result = await Process.run(cmd, arguments, runInShell: true);
   final success = result.exitCode == 0;
 
   printResult(message: message ?? cmd, success: result.exitCode == 0);
 
   if (!success) {
-    hasErrors = true;
-    if (verbose) {
-      print(result.stdout.toString());
-      print(result.stderr.toString());
+    final errorMsg = result.stderr.toString();
+    final stdoutMsg = result.stdout.toString();
+
+    if (errorMsg.isNotEmpty) {
+      stderr.writeln('Errors:');
+      stderr.writeln(result.stderr.toString());
+    }
+    if (stdoutMsg.isNotEmpty) {
+      stderr.writeln(result.stdout.toString());
+    }
+
+    if (exitOnError) {
+      exit(1);
     }
   }
   return success;
@@ -86,7 +117,12 @@ Future<bool> check({
 // .............................................................................
 void parseArgs(List<String> arguments) {
   final parser = ArgParser()
-    ..addFlag('verbose', negatable: false, abbr: 'v')
+    ..addFlag(
+      'verbose',
+      negatable: false,
+      abbr: 'v',
+      defaultsTo: true,
+    )
     ..addFlag(
       'help',
       negatable: false,
@@ -115,6 +151,8 @@ Future<int> main(List<String> arguments) async {
   loadConfig();
   print('');
 
+  await checkInternet();
+
   await check(
     name: 'analyze',
     command: 'dart analyze --fatal-infos --fatal-warnings',
@@ -128,9 +166,9 @@ Future<int> main(List<String> arguments) async {
   );
 
   await check(
-    name: 'coverage',
-    command: 'dart check_coverage.dart',
-    message: 'dart check_coverage.dart',
+    name: 'tests',
+    command: 'dart check_tests.dart',
+    message: 'dart check_tests.dart',
   );
 
   await check(

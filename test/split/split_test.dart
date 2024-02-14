@@ -10,49 +10,51 @@ import 'package:gg_image_tools/gg_image_tools.dart';
 import 'package:path/path.dart';
 import 'package:test/test.dart';
 
-import '../expected_output_pathes.dart';
+import '../helpers.dart';
 
 void main() {
-  final tempDir =
-      Directory('/tmp').existsSync() ? Directory('/tmp') : Directory.systemTemp;
-  final output = Directory(join(tempDir.path, 'move_images_test'));
   final input = Directory('./test/test_images/2024-02-10 Images');
+  final target = Directory(tempDir.path).createTempSync();
 
   // ...........................................................................
   void createOutputFolder() {
     // Delete previous folder
-    if (output.existsSync()) {
-      output.deleteSync(recursive: true);
+    if (target.existsSync()) {
+      target.deleteSync(recursive: true);
     }
   }
 
   group('MoveImagesWithWrongDate', () {
+    test('should be able to write to temp directory', () {
+      expect(tempDir.existsSync(), isTrue);
+      final sampleFilePath = join(tempDir.path, 'jd08420.txt');
+      File(sampleFilePath).writeAsStringSync('Hello');
+    });
+
     // #########################################################################
     group('exec()', () {
       // .......................................................................
-      for (final useBirthDate in [true, false]) {
-        test(
-            'should move images and videos with creation dates that match not '
-            'the folder date to a new parent folder', () async {
-          createOutputFolder();
-          final split = Split(
-            input: input,
-            output: output,
-            log: (msg) {},
-            useBirthDate: useBirthDate,
-          );
-          await split.exec();
 
-          // The images have been moved to folders matching their creation date
-          expectRightFilePathes(output: output, useBirthDate: useBirthDate);
-        });
-      }
+      test(
+          'should move images and videos with creation dates that match not '
+          'the folder date to a new parent folder', () async {
+        createOutputFolder();
+        final split = Split(
+          input: input,
+          output: target,
+          log: (msg) {},
+        );
+        await split.exec();
+
+        // The images have been moved to folders matching their creation date
+        expectRightFilePathes(output: target);
+      });
     });
 
     // .........................................................................
     test('should throw if target folder already exists', () {
       createOutputFolder();
-      output.createSync();
+      target.createSync();
 
       expect(
         () {

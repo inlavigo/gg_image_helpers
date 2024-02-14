@@ -25,6 +25,28 @@ jobs:
             echo "is_flutter=false" >> "$GITHUB_ENV"
           fi
 
+      - name: Cache Flutter Dependencies
+        if: env.is_flutter == 'true'
+        uses: actions/cache@v3.2.4
+        with:
+          path: |
+            ~/.pub-cache
+            **/pubspec.lock
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+
+      - name: Cache Dart Dependencies
+        if: env.is_flutter == 'false'
+        uses: actions/cache@v3.2.4
+        with:
+          path: |
+            ~/.pub-cache
+            **/pubspec.lock
+          key: ${{ runner.os }}-dart-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-dart-
+
       - name: Set up Flutter
         if: env.is_flutter == 'true'
         uses: subosito/flutter-action@v2
@@ -45,11 +67,9 @@ jobs:
             dart pub get
           fi
 
-      - name: Install lcov
-        run: sudo apt-get install lcov
-
       - name: Make Script Executable
         run: chmod +x ./check.dart
+        shell: bash
 
       - name: Run Script
         run: ./check.dart --verbose

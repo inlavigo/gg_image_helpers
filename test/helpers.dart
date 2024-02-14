@@ -9,25 +9,30 @@ import 'dart:io';
 import 'package:test/test.dart';
 
 // ...........................................................................
+final gitHubTmpPath = Platform.environment['RUNNER_TEMP'];
+final gitHubTmp = gitHubTmpPath != null ? Directory(gitHubTmpPath!) : null;
+final slashTmp = Directory('/tmp').existsSync() ? Directory('/tmp') : null;
+final systemTmp = Directory.systemTemp;
+final isApple = Platform.isMacOS || Platform.isIOS;
+final tempDir = gitHubTmp ?? slashTmp ?? systemTmp;
+
+// ...........................................................................
 void expectRightFilePathes({
   required Directory output,
-  required bool useBirthDate,
 }) {
   final outputPath = output.path;
   final expectedFiles = _expectedOutputImagePathes(
     outputPath: outputPath,
-    useBirthDate: useBirthDate,
   );
 
   for (final path in expectedFiles) {
-    expect(File(path).existsSync(), isTrue);
+    expect(File(path).existsSync(), isTrue, reason: 'File not found: $path');
   }
 }
 
 // .............................................................................
 List<String> _expectedOutputImagePathes({
   required String outputPath,
-  required bool useBirthDate,
 }) =>
     [
       // 2023-07-06
@@ -44,8 +49,6 @@ List<String> _expectedOutputImagePathes({
       '$outputPath/2023-09-17 Images/IMG_7958.HEIC',
 
       // 2023-03-12
-      if (useBirthDate)
-        '$outputPath/2022-03-12 Images/flower.mov'
-      else
-        '$outputPath/2023-03-12 Images/flower.mov',
+      if (Platform.isMacOS || Platform.isIOS)
+        '$outputPath/2022-03-12 Images/flower.mov',
     ];

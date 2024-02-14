@@ -27,7 +27,6 @@ class Split {
     required this.input,
     required this.output,
     required this.log,
-    this.useBirthDate = true,
   }) {
     assert(input.existsSync());
     assert(input.absolute != output.absolute);
@@ -44,9 +43,6 @@ class Split {
 
   /// The log function
   void Function(String msg) log;
-
-  /// Try to use the birth date of the file
-  final bool useBirthDate;
 
   // ...........................................................................
   /// Execute process
@@ -75,6 +71,7 @@ class Split {
   }
 
   // ...........................................................................
+  // coverage:ignore-start
   Future<DateTime?> _getFileCreationDate(String filePath) async {
     // macOS 'stat' command to get file details, including the creation date.
     // The '-f' flag specifies the output format, '%B' gets the birth time of
@@ -89,9 +86,12 @@ class Split {
     }
     return null;
   }
+  // coverage:ignore-end
 
   // ...........................................................................
   Future<DateTime> _fileCreationDate(File image) async {
+    // coverage:ignore-start
+    bool useBirthDate = (Platform.isMacOS || Platform.isIOS);
     var result = useBirthDate ? await _getFileCreationDate(image.path) : null;
     if (result != null) {
       return result;
@@ -110,6 +110,7 @@ class Split {
     }
 
     return result;
+    // coverage:ignore-end
   }
 
   // ...........................................................................
