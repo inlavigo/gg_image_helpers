@@ -27,7 +27,7 @@ jobs:
 
       - name: Cache Flutter Dependencies
         if: env.is_flutter == 'true'
-        uses: actions/cache@v3.2.4
+        uses: actions/cache@v4
         with:
           path: |
             ~/.pub-cache
@@ -38,7 +38,7 @@ jobs:
 
       - name: Cache Dart Dependencies
         if: env.is_flutter == 'false'
-        uses: actions/cache@v3.2.4
+        uses: actions/cache@v4
         with:
           path: |
             ~/.pub-cache
@@ -68,8 +68,7 @@ jobs:
           fi
 
       - name: Make Script Executable
-        run: chmod +x ./check.dart
-        shell: bash
+        run: chmod +x ./check
 
       - name: Run Script
-        run: ./check.dart --verbose
+        run: ./check --verbose
