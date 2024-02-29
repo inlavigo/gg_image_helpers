@@ -31,7 +31,7 @@ class Split {
     assert(input.existsSync());
     assert(input.absolute != output.absolute);
     if (output.existsSync()) {
-      throw Exception('Target folder already exists');
+      throw ArgumentError('Target folder already exists');
     }
   }
 
@@ -68,6 +68,8 @@ class Split {
         image: image,
       );
     }
+
+    log('Done.');
   }
 
   // ...........................................................................
