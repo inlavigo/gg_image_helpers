@@ -4,7 +4,6 @@
 // Use of this source code is governed by terms that can be
 // found in the LICENSE file in the root of this package.
 
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
@@ -16,8 +15,10 @@ import 'package:test/test.dart';
 void main() {
   final tmpDir = Directory.systemTemp;
   final inDir = tmpDir.createTempSync();
-  final outDir = Directory(join(tmpDir.path, 'outDir'))
-    ..deleteSync(recursive: true);
+  final outDir = Directory(join(tmpDir.path, 'outDir'));
+  if (outDir.existsSync()) {
+    outDir.deleteSync(recursive: true);
+  }
 
   group('Split', () {
     // #########################################################################

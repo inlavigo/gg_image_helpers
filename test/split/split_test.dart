@@ -65,10 +65,10 @@ void main() {
           );
         },
         throwsA(
-          isA<Exception>().having(
-            (e) => e.toString(),
+          isA<ArgumentError>().having(
+            (e) => e.message,
             'toString',
-            'Exception: Target folder already exists',
+            contains('Target folder already exists'),
           ),
         ),
       );
