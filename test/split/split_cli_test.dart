@@ -26,7 +26,7 @@ void main() {
       test('should allow to execute the command from cli', () async {
         final m = <String>[];
         capturePrint(
-          log: m.add,
+          ggLog: m.add,
           code: () async {
             // Create command runner
             final runner = CommandRunner<void>('test', 'test');
@@ -35,7 +35,7 @@ void main() {
 
             // Run command without options
             // Did usage description?
-            runner.run([]);
+            await runner.run([]);
             expect(m.last, contains('sage: test <command> [arguments]'));
             expect(m.last, contains(command.name));
             expect(m.last, contains(command.description));
