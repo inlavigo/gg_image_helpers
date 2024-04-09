@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.0.1] - 2024-04-09
 
 ### Removed
 
@@ -15,5 +15,5 @@
 - 'Github Actions Pipeline: Add SDK file containing flutter into .github/workflows to make github installing flutter and not dart SDK'
 - Prepare publish
 
-[Unreleased]: https://github.com/inlavigo/gg_image_tools/compare/1.0.0...HEAD
+[1.0.1]: https://github.com/inlavigo/gg_image_tools/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/inlavigo/gg_image_tools/tag/%tag
