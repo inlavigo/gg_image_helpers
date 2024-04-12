@@ -23,4 +23,3 @@ dev_dependencies:
   yaml: ^3.1.2
   dart_ping: ^9.0.1
   gg_capture_print: ^1.0.2
-  gg_install_gg: ^1.0.1
