@@ -10,7 +10,7 @@ dependencies:
   args: ^2.4.2
   colorize: ^3.0.0
   exif: ^3.3.0
-  gg_args: ^1.0.3
+  gg_args: ^2.0.2
   path: ^1.8.0
   recase: ^4.1.0
 

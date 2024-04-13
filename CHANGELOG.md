@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Upgraded gg\_args
+
 ### Removed
 
 - dependency to gg\_install\_gg, remove ./check script
