@@ -7,7 +7,7 @@
 // .............................................................................
 import 'package:args/command_runner.dart';
 import 'package:colorize/colorize.dart';
-import 'package:gg_image_tools/src/split/split_cli.dart';
+import 'package:gg_image_tools/gg_image_tools.dart';
 
 /// Executes the GgImageTools command line interface
 Future<void> ggImageToolsCli({
@@ -23,7 +23,8 @@ Future<void> ggImageToolsCli({
     )
 
       /// Add more commands here
-      ..addCommand(SplitCli(log: log));
+      ..addCommand(SplitCli(log: log))
+      ..addCommand(MoveVideosCli(log: log));
 
     // Run the command
     await runner.run(args);

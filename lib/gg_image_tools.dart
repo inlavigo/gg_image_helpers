@@ -8,3 +8,5 @@ library;
 
 export 'src/split/split_cli.dart';
 export 'src/split/split.dart';
+export 'src/move_videos/move_videos_cli.dart';
+export 'src/move_videos/move_videos.dart';
