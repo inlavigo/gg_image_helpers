@@ -1,6 +1,6 @@
 name: gg_image_tools
 description: Various tools for image organization. They help to organize folders with images
-version: 1.0.3
+version: 1.1.0
 repository: https://github.com/inlavigo/gg_image_tools
 
 environment:

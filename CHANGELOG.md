@@ -6,6 +6,10 @@
 
 - Add moveVideos
 
+### Changed
+
+- Increase version
+
 ## [1.0.2] - 2024-04-13
 
 ### Changed
